@@ -59,7 +59,7 @@ const QUICK_LINKS = [
   { href: "/studios", label: "Explore Studios" },
   { href: "/how-it-works", label: "How It Works" },
   { href: "/about", label: "About Us" },
-  { href: "/studios/new", label: "List Your Studio" },
+  { href: "/add-studio", label: "List Your Studio" },
 ]
 
 const POPULAR_CATEGORIES = [

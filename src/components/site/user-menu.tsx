@@ -24,9 +24,9 @@ import { useSession } from "@/lib/session"
 
 const MENU_ITEMS = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboardIcon },
-  { href: "/studios/new", label: "Add New Studio", icon: PlusIcon },
-  { href: "/dashboard/listings", label: "My Studio Listings", icon: ListIcon },
-  { href: "/dashboard/bookings", label: "My Bookings", icon: CalendarCheckIcon },
+  { href: "/add-studio", label: "Add New Studio", icon: PlusIcon },
+  { href: "/my-listings", label: "My Studio Listings", icon: ListIcon },
+  { href: "/my-bookings", label: "My Bookings", icon: CalendarCheckIcon },
 ]
 
 export function UserMenu({ user }: { user: SessionUser }) {
