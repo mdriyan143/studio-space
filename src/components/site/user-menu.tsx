@@ -1,6 +1,8 @@
+
 "use client"
 
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import {
   CalendarCheckIcon,
   LayoutDashboardIcon,
@@ -31,26 +33,42 @@ const MENU_ITEMS = [
 
 export function UserMenu({ user }: { user: SessionUser }) {
   const { signOut } = useSession()
+  const router = useRouter()
+
+  const handleLogout = async () => {
+    try {
+      await signOut()
+      router.push("/")
+      router.refresh()
+    } catch (error) {
+      console.error("Logout failed:", error)
+    }
+  }
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
         render={
           <Button
+            type="button"
             variant="ghost"
             className="gap-2 rounded-full pr-3 pl-1"
             aria-label="Open user menu"
-          />
+          >
+            <Avatar size="sm">
+              {user.avatarUrl ? (
+                <AvatarImage src={user.avatarUrl} alt="" />
+              ) : null}
+              <AvatarFallback>{user.initials}</AvatarFallback>
+            </Avatar>
+
+            <span className="hidden max-w-32 truncate text-sm font-medium sm:inline">
+              {user.name}
+            </span>
+          </Button>
         }
-      >
-        <Avatar size="sm">
-          {user.avatarUrl ? <AvatarImage src={user.avatarUrl} alt="" /> : null}
-          <AvatarFallback>{user.initials}</AvatarFallback>
-        </Avatar>
-        <span className="hidden max-w-32 truncate text-sm font-medium sm:inline">
-          {user.name}
-        </span>
-      </DropdownMenuTrigger>
+      />
+
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuLabel>
           <p className="truncate text-sm font-medium text-foreground">
@@ -60,18 +78,24 @@ export function UserMenu({ user }: { user: SessionUser }) {
             {user.email}
           </p>
         </DropdownMenuLabel>
+
         <DropdownMenuSeparator />
+
         {MENU_ITEMS.map((item) => (
-          <DropdownMenuItem key={item.href} render={<Link href={item.href} />}>
+          <DropdownMenuItem
+            key={item.href}
+            render={<Link href={item.href} />}
+          >
             <item.icon className="text-muted-foreground" />
             {item.label}
           </DropdownMenuItem>
         ))}
+
         <DropdownMenuSeparator />
+
         <DropdownMenuItem
           variant="destructive"
-          onSelect={signOut}
-          render={<button type="button" />}
+          onClick={handleLogout}
         >
           <LogOutIcon />
           Logout

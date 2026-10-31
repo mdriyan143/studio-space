@@ -1,3 +1,4 @@
+
 "use client"
 
 import Link from "next/link"
@@ -26,7 +27,6 @@ const NAV_LINKS = [
 ]
 
 function isLinkActive(pathname: string, href: string) {
-  // Exact match for the home route; prefix match for everything else.
   return href === "/" ? pathname === "/" : pathname.startsWith(href)
 }
 
@@ -42,6 +42,7 @@ function NavLink({
   onNavigate?: () => void
 }) {
   const active = isLinkActive(pathname, href)
+
   return (
     <Link
       href={href}
@@ -55,6 +56,7 @@ function NavLink({
       )}
     >
       {label}
+
       {active && (
         <span
           aria-hidden
@@ -67,7 +69,7 @@ function NavLink({
 
 export function SiteHeader() {
   const pathname = usePathname()
-  const { user } = useSession()
+  const { user, isPending } = useSession()
   const [mobileOpen, setMobileOpen] = React.useState(false)
 
   return (
@@ -86,10 +88,12 @@ export function SiteHeader() {
           >
             <MenuIcon />
           </SheetTrigger>
+
           <SheetContent side="left" className="w-72">
             <SheetHeader>
               <SheetTitle>Navigation</SheetTitle>
             </SheetHeader>
+
             <nav
               aria-label="Site navigation"
               className="flex flex-col gap-1 px-4"
@@ -118,7 +122,7 @@ export function SiteHeader() {
         </nav>
 
         <div className="ml-auto flex items-center gap-2">
-          {user ? (
+          {isPending ? null : user ? (
             <UserMenu user={user} />
           ) : (
             <>
@@ -129,7 +133,10 @@ export function SiteHeader() {
               >
                 Login
               </Button>
-              <Button render={<Link href="/register" />}>Register</Button>
+
+              <Button render={<Link href="/register" />}>
+                Register
+              </Button>
             </>
           )}
         </div>

@@ -1,6 +1,8 @@
+
 "use client"
 
 import * as React from "react"
+import { authClient } from "@/lib/auth-client"
 
 export type SessionUser = {
   name: string
@@ -9,54 +11,39 @@ export type SessionUser = {
   avatarUrl?: string
 }
 
-/**
- * Placeholder for real authentication. Until auth is wired up, the session
- * defaults to the demo user below. Set `startInDemo` to false to boot into
- * the header's unauthenticated state.
- */
-const startInDemo = true
-
-const DEMO_USER: SessionUser = {
-  name: "Ava Rein",
-  email: "ava@studiospace.com",
-  initials: "AR",
-}
-
-type SessionContextValue = {
-  user: SessionUser | null
-  signIn: (user?: Partial<SessionUser>) => void
-  signOut: () => void
-}
-
-const SessionContext = React.createContext<SessionContextValue | null>(null)
-
-export function SessionProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = React.useState<SessionUser | null>(
-    startInDemo ? DEMO_USER : null
-  )
-
-  const signIn = React.useCallback((nextUser?: Partial<SessionUser>) => {
-    setUser({ ...DEMO_USER, ...nextUser })
-  }, [])
-
-  const signOut = React.useCallback(() => {
-    setUser(null)
-  }, [])
-
-  const context = React.useMemo(
-    () => ({ user, signIn, signOut }),
-    [user, signIn, signOut]
-  )
-
-  return (
-    <SessionContext.Provider value={context}>{children}</SessionContext.Provider>
-  )
+export function SessionProvider({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return <>{children}</>
 }
 
 export function useSession() {
-  const context = React.useContext(SessionContext)
-  if (!context) {
-    throw new Error("useSession must be used within a <SessionProvider>")
+  const { data: session, isPending } = authClient.useSession()
+
+  const user: SessionUser | null = session?.user
+    ? {
+        name: session.user.name,
+        email: session.user.email,
+        initials: session.user.name
+          .split(" ")
+          .filter(Boolean)
+          .map((part) => part[0])
+          .join("")
+          .slice(0, 2)
+          .toUpperCase(),
+        avatarUrl: session.user.image ?? undefined,
+      }
+    : null
+
+  const signOut = React.useCallback(async () => {
+    await authClient.signOut()
+  }, [])
+
+  return {
+    user,
+    signOut,
+    isPending,
   }
-  return context
 }
