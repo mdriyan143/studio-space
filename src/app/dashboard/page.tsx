@@ -1,10 +1,12 @@
-import { PagePlaceholder } from "@/components/site/page-placeholder"
+import { Dashboard } from "@/components/site/dashboard"
+import { RequireAuth } from "@/components/site/require-auth"
 
-export default function Page() {
+export const metadata = { title: "Dashboard" }
+
+export default function DashboardPage() {
   return (
-    <PagePlaceholder
-      title="Dashboard"
-      description="Your bookings, listings and studio stats at a glance."
-    />
+    <RequireAuth>
+      <Dashboard />
+    </RequireAuth>
   )
 }
