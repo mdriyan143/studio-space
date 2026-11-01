@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
-import { Loader2Icon } from "lucide-react"
+import { Loader2Icon, UploadIcon } from "lucide-react"
 import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { api } from "@/lib/api"
+import { uploadImage } from "@/lib/imgbb"
 import { useSession } from "@/lib/session"
 import { STUDIO_CATEGORIES, type Studio } from "@/lib/studios"
 
@@ -81,11 +82,14 @@ export function StudioForm({ studio }: { studio?: Studio }) {
     studio?.amenities ?? []
   )
   const [submitting, setSubmitting] = React.useState(false)
+  const [uploading, setUploading] = React.useState(false)
+  const fileRef = React.useRef<HTMLInputElement>(null)
 
   const {
     register,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -108,6 +112,22 @@ export function StudioForm({ studio }: { studio?: Studio }) {
     setAmenities((prev) =>
       prev.includes(item) ? prev.filter((a) => a !== item) : [...prev, item]
     )
+
+  const handleCoverUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setUploading(true)
+    try {
+      const url = await uploadImage(file)
+      setValue("imageUrl", url, { shouldValidate: true })
+      toast.success("Image uploaded.")
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Upload failed.")
+    } finally {
+      setUploading(false)
+      e.target.value = ""
+    }
+  }
 
   const onSubmit = async (values: FormValues) => {
     setSubmitting(true)
@@ -194,7 +214,7 @@ export function StudioForm({ studio }: { studio?: Studio }) {
             <Input
               id="maxCapacity"
               inputMode="numeric"
-              placeholder="10"
+              placeholder="e.g. 10"
               {...register("maxCapacity")}
             />
             <FieldError message={errors.maxCapacity?.message} />
@@ -205,7 +225,7 @@ export function StudioForm({ studio }: { studio?: Studio }) {
             <Input
               id="hourlyRate"
               inputMode="decimal"
-              placeholder="45"
+              placeholder="e.g. 45"
               {...register("hourlyRate")}
             />
             <FieldError message={errors.hourlyRate?.message} />
@@ -216,7 +236,7 @@ export function StudioForm({ studio }: { studio?: Studio }) {
             <Input
               id="securityDeposit"
               inputMode="decimal"
-              placeholder="100"
+              placeholder="e.g. 100"
               {...register("securityDeposit")}
             />
             <FieldError message={errors.securityDeposit?.message} />
@@ -234,12 +254,40 @@ export function StudioForm({ studio }: { studio?: Studio }) {
 
           <div className="flex flex-col gap-2 sm:col-span-2">
             <Label htmlFor="imageUrl">Image URL</Label>
-            <Input
-              id="imageUrl"
-              placeholder="https://i.ibb.co/..."
-              {...register("imageUrl")}
-            />
+
+            <div className="flex flex-col gap-2 sm:flex-row">
+              <Input
+                id="imageUrl"
+                placeholder="Paste an image link, or upload a file"
+                className="flex-1"
+                {...register("imageUrl")}
+              />
+
+              <input
+                ref={fileRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleCoverUpload}
+              />
+              <Button
+                type="button"
+                variant="outline"
+                disabled={uploading}
+                onClick={() => fileRef.current?.click()}
+                className="shrink-0"
+              >
+                {uploading ? (
+                  <Loader2Icon className="size-4 animate-spin" />
+                ) : (
+                  <UploadIcon className="size-4" />
+                )}
+                {uploading ? "Uploading..." : "Upload image"}
+              </Button>
+            </div>
+
             <FieldError message={errors.imageUrl?.message} />
+
             {previewOk && (
               // eslint-disable-next-line @next/next/no-img-element
               <img
@@ -313,7 +361,7 @@ export function StudioForm({ studio }: { studio?: Studio }) {
           >
             Cancel
           </Button>
-          <Button type="submit" disabled={submitting}>
+          <Button type="submit" disabled={submitting || uploading}>
             {submitting && <Loader2Icon className="size-4 animate-spin" />}
             {isEdit ? "Save changes" : "Add studio"}
           </Button>
