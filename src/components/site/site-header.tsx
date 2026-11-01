@@ -1,6 +1,6 @@
 
 "use client"
-
+import { ThemeToggle } from "@/components/site/theme-toggle"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import * as React from "react"
@@ -18,6 +18,7 @@ import {
 import { Logo } from "@/components/site/logo"
 import { UserMenu } from "@/components/site/user-menu"
 import { useSession } from "@/lib/session"
+
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },

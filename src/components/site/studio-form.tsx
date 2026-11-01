@@ -70,7 +70,7 @@ function FieldError({ message }: { message?: string }) {
 }
 
 const selectClass =
-  "h-9 w-full rounded-lg border border-input bg-transparent px-3 text-sm text-foreground outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 dark:bg-input/30"
+  "h-9 w-full rounded-lg border border-input bg-transparent px-3 text-sm text-foreground outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 dark:bg-input/30 dark:[color-scheme:dark] [&_option]:bg-popover [&_option]:text-popover-foreground"
 
 export function StudioForm({ studio }: { studio?: Studio }) {
   const router = useRouter()
