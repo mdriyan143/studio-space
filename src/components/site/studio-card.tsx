@@ -15,13 +15,19 @@ import type { Studio } from "@/lib/studios"
 export function StudioCard({ studio }: { studio: Studio }) {
   return (
     <Card size="sm" className="h-full">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={studio.imageUrl}
-        alt={studio.title}
-        className="aspect-[4/3] w-full object-cover"
-        loading="lazy"
-      />
+      <div className="relative">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={studio.imageUrl}
+          alt={studio.title}
+          className="aspect-[4/3] w-full object-cover"
+          loading="lazy"
+        />
+        <WishlistButton
+          studioId={studio._id}
+          className="absolute right-3 top-3"
+        />
+      </div>
       <CardContent className="flex flex-1 flex-col gap-3 pt-4">
         <div className="flex items-start justify-between gap-2">
           <div className="flex min-w-0 flex-col gap-0.5">
