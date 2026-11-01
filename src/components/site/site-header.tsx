@@ -123,7 +123,8 @@ export function SiteHeader() {
         </nav>
 
         <div className="ml-auto flex items-center gap-2">
-          {isPending ? null : user ? (
+            <ThemeToggle />
+            {isPending ? null : user ? (
             <UserMenu user={user} />
           ) : (
             <>

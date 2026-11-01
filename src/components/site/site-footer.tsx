@@ -63,12 +63,11 @@ const QUICK_LINKS = [
 ]
 
 const POPULAR_CATEGORIES = [
-  { href: "/studios?category=photography", label: "Photography Studios" },
-  { href: "/studios?category=recording", label: "Recording Studios" },
-  { href: "/studios?category=podcast", label: "Podcast Studios" },
-  { href: "/studios?category=video", label: "Video & Film Studios" },
-  { href: "/studios?category=dance", label: "Dance & Rehearsal Studios" },
-  { href: "/studios?category=meeting", label: "Creative Meeting Rooms" },
+  { href: "/studios?category=Photo%20Studio", label: "Photo Studios" },
+  { href: "/studios?category=Film%20Stage", label: "Film Stages" },
+  { href: "/studios?category=Podcast%20Lounge", label: "Podcast Lounges" },
+  { href: "/studios?category=Music%20Suite", label: "Music Suites" },
+  { href: "/studios?category=Workshop", label: "Art Workshops" },
 ]
 
 function FooterLink({ href, label }: { href: string; label: string }) {
