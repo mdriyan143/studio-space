@@ -1,10 +1,12 @@
-import { PagePlaceholder } from "@/components/site/page-placeholder"
+import { RequireAuth } from "@/components/site/require-auth"
+import { StudioForm } from "@/components/site/studio-form"
 
-export default function Page() {
+export const metadata = { title: "Add New Studio" }
+
+export default function AddStudioPage() {
   return (
-    <PagePlaceholder
-      title="Add New Studio"
-      description="List your studio: describe the space, set your rate, and publish."
-    />
+    <RequireAuth>
+      <StudioForm />
+    </RequireAuth>
   )
 }
