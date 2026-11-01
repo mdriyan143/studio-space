@@ -1,10 +1,12 @@
-import { PagePlaceholder } from "@/components/site/page-placeholder"
+import { MyListings } from "@/components/site/my-listings"
+import { RequireAuth } from "@/components/site/require-auth"
 
-export default function Page() {
+export const metadata = { title: "My Studio Listings" }
+
+export default function MyListingsPage() {
   return (
-    <PagePlaceholder
-      title="My Studio Listings"
-      description="Manage the studios you have published on StudioSpace."
-    />
+    <RequireAuth>
+      <MyListings />
+    </RequireAuth>
   )
 }
