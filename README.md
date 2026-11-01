@@ -25,6 +25,17 @@ Studio owners can list and manage their studios, while creators can browse avail
 - **Notifications:** User-friendly toast notifications for application actions.
 - **Studio Reviews:** Explore studio reviews and ratings.
 
+
+## Examiner Test Credentials
+
+**Website:** https://studio-space-mdriyan143.vercel.app/
+
+**Login Email:** demo@gmail.com
+
+**Login Password:** DEmo1234@
+
+Google authentication is also available.
+
 ## Technology Stack
 
 ### Frontend
@@ -140,9 +151,9 @@ npm run start
 
 **Website:** https://studio-space-mdriyan143.vercel.app/
 
-**Login Email:** ADD_EMAIL
+**Login Email:** demo@gmail.com
 
-**Login Password:** ADD_PASSWORD
+**Login Password:** DEmo1234@
 
 Google authentication is also available.
 
