@@ -9,6 +9,7 @@ import {
   ListIcon,
   LogOutIcon,
   PlusIcon,
+  HeartIcon,
 } from "lucide-react"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -29,6 +30,7 @@ const MENU_ITEMS = [
   { href: "/add-studio", label: "Add New Studio", icon: PlusIcon },
   { href: "/my-listings", label: "My Studio Listings", icon: ListIcon },
   { href: "/my-bookings", label: "My Bookings", icon: CalendarCheckIcon },
+  { href: "/wishlist", label: "Saved Studios", icon: HeartIcon },
 ]
 
 export function UserMenu({ user }: { user: SessionUser }) {

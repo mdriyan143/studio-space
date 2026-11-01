@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { MapPinIcon, StarIcon } from "lucide-react"
-
+import { WishlistButton } from "@/components/site/wishlist-button"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
