@@ -1,36 +1,152 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# StudioSpace — Creative Studio Booking Platform
 
-## Getting Started
+**Live Website:** https://studio-space-mdriyan143.vercel.app/
 
-First, run the development server:
+**Client Repository:** https://github.com/mdriyan143/studio-space
+
+## About the Project
+
+StudioSpace is a peer-to-peer creative workspace booking platform that connects creators with studio owners. It allows photographers, filmmakers, musicians, podcasters, and other creative professionals to discover, explore, and book suitable creative spaces.
+
+Studio owners can list and manage their studios, while creators can browse available workspaces, make reservations, manage bookings, and save their favorite studios.
+
+## Key Features
+
+- **Studio Discovery:** Explore creative workspaces, including photography studios, film stages, podcast rooms, music suites, and workshops.
+- **Studio Management:** Authenticated users can add, update, and delete their own studio listings.
+- **Authentication:** Secure user registration and login with Better Auth, including Google authentication.
+- **Studio Booking:** View studio details, select booking dates and times, and submit reservations.
+- **Booking Management:** View booking history, check reservation statuses, and cancel eligible pending bookings.
+- **Saved Studios Wishlist:** Save favorite studios using the heart button and manage them from the wishlist page.
+- **PDF Booking Invoice:** Download PDF invoices for confirmed studio bookings.
+- **Dashboard:** Access personalized information about studio listings and bookings.
+- **Theme Customization:** Switch between light and dark themes.
+- **Responsive Design:** Optimized interface for desktop, tablet, and mobile devices.
+- **Notifications:** User-friendly toast notifications for application actions.
+- **Studio Reviews:** Explore studio reviews and ratings.
+
+## Technology Stack
+
+### Frontend
+- Next.js 16 (App Router)
+- React 19
+- TypeScript
+- Tailwind CSS 4
+- shadcn/ui
+- Lucide React
+- Swiper.js
+- Sonner
+- React Hook Form
+- Zod
+
+### Backend
+- Express.js
+- Node.js
+- MongoDB
+- REST API
+
+### Authentication
+- Better Auth
+- MongoDB Adapter
+- Google OAuth
+- JWT
+
+### Additional Tools
+- jsPDF (PDF invoice generation)
+- Vercel (Frontend Deployment)
+- Git & GitHub
+
+## Installation and Local Setup
+
+### Prerequisites
+
+- Node.js (LTS recommended)
+- npm
+- MongoDB database
+- Git
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/mdriyan143/studio-space.git
+```
+
+### 2. Navigate to the Client Directory
+
+```bash
+cd studio-space
+```
+
+### 3. Install Dependencies
+
+```bash
+npm install
+```
+
+### 4. Configure Environment Variables
+
+Create a `.env.local` file in the project root and configure the required environment variables:
+
+```env
+NEXT_PUBLIC_API_URL=your_backend_api_url
+BETTER_AUTH_SECRET=your_better_auth_secret
+BETTER_AUTH_URL=http://localhost:3000
+MONGODB_URI=your_mongodb_connection_string
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+```
+
+Use the environment variable names and values configured in your actual deployment and backend. Never commit secret credentials to GitHub.
+
+### 5. Start the Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 6. Build for Production
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+```
 
-## Learn More
+Start the production server:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run start
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Application Routes
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Route | Description |
+|---|---|
+| `/` | Home page |
+| `/studios` | Explore all studios |
+| `/studios/[id]` | Studio details |
+| `/add-studio` | Add a new studio |
+| `/studios/edit/[id]` | Update a studio |
+| `/my-listings` | Manage studio listings |
+| `/my-bookings` | Manage reservations |
+| `/wishlist` | View saved studios |
+| `/dashboard` | User dashboard |
+| `/login` | User login |
+| `/register` | User registration |
+| `/about` | About StudioSpace |
+| `/how-it-works` | How the platform works |
 
-## Deploy on Vercel
+## Examiner Test Credentials
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**Website:** https://studio-space-mdriyan143.vercel.app/
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Login Email:** ADD_EMAIL
+
+**Login Password:** ADD_PASSWORD
+
+Google authentication is also available.
+
+
+---
+
+Developed as a creative workspace booking platform for the StudioSpace project assignment.
