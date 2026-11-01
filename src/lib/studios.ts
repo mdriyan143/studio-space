@@ -16,7 +16,7 @@ export type Studio = {
   location: string
   imageUrl: string
   amenities: string[]
-  gallery?: string[]
+  gallery: string[]
   overview: string
   ownerId: string
   ownerEmail: string
