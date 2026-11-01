@@ -5,11 +5,12 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import {
   CalendarCheckIcon,
+  ChevronDownIcon,
   LayoutDashboardIcon,
   ListIcon,
   LogOutIcon,
   PlusIcon,
-  HeartIcon,
+  HeartIcon
 } from "lucide-react"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -54,7 +55,7 @@ export function UserMenu({ user }: { user: SessionUser }) {
           <Button
             type="button"
             variant="ghost"
-            className="gap-2 rounded-full pr-3 pl-1"
+           className="group gap-2 rounded-full border border-border pr-3 pl-1"
             aria-label="Open user menu"
           >
             <Avatar size="sm">
@@ -67,6 +68,7 @@ export function UserMenu({ user }: { user: SessionUser }) {
             <span className="hidden max-w-32 truncate text-sm font-medium sm:inline">
               {user.name}
             </span>
+            <ChevronDownIcon className="size-4 text-muted-foreground transition-transform group-data-[popup-open]:rotate-180" />
           </Button>
         }
       />
