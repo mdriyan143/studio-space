@@ -1,17 +1,20 @@
 import Image from "next/image"
 import Link from "next/link"
 import {
-  ArrowRightIcon,
+  BadgeCheckIcon,
   CalendarCheckIcon,
   CameraIcon,
   ClockIcon,
-  MapPinIcon,
+  HeadsetIcon,
   SearchIcon,
-  SparklesIcon,
+  ShieldCheckIcon,
   StarIcon,
+  WrenchIcon,
 } from "lucide-react"
 import { cn } from "cn"
 
+import { FeaturedStudios } from "@/components/site/featured-studios"
+import { HeroSlider } from "@/components/site/hero-slider"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -22,131 +25,97 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 
-/* Soft cap on how far unsplash crops can be pushed if images change later. */
-const CARD_IMAGE_SIZES =
-  "(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-
-const STATS = [
-  { value: "12k+", label: "Studios listed" },
-  { value: "48", label: "Cities covered" },
-  { value: "4.9", label: "Average rating" },
-  { value: "120k+", label: "Bookings completed" },
+const HIGHLIGHTS = [
+  { value: "5", label: "Studio categories" },
+  { value: "Hourly", label: "Flexible booking" },
+  { value: "Verified", label: "Host accounts" },
+  { value: "24/7", label: "Creator support" },
 ]
 
 const CATEGORIES = [
   {
-    href: "/studios?category=photography",
-    label: "Photography",
+    href: "/studios?category=Photo%20Studio",
+    label: "Photo Studios",
     image: "/studios/cat-photography.jpg",
-    listings: "3,214 listings",
+    listings: "Cyc walls & lofts",
   },
   {
-    href: "/studios?category=recording",
-    label: "Recording",
-    image: "/studios/cat-recording.jpg",
-    listings: "2,876 listings",
-  },
-  {
-    href: "/studios?category=podcast",
-    label: "Podcast",
-    image: "/studios/cat-podcast.jpg",
-    listings: "1,902 listings",
-  },
-  {
-    href: "/studios?category=video",
-    label: "Video & Film",
+    href: "/studios?category=Film%20Stage",
+    label: "Sound Stages",
     image: "/studios/cat-video.jpg",
-    listings: "2,145 listings",
+    listings: "Film & video sets",
   },
   {
-    href: "/studios?category=dance",
-    label: "Dance & Rehearsal",
-    image: "/studios/cat-dance.jpg",
-    listings: "1,530 listings",
+    href: "/studios?category=Podcast%20Lounge",
+    label: "Podcast Rooms",
+    image: "/studios/cat-podcast.jpg",
+    listings: "Quiet, treated rooms",
   },
   {
-    href: "/studios?category=meeting",
-    label: "Creative Rooms",
+    href: "/studios?category=Music%20Suite",
+    label: "Music Suites",
+    image: "/studios/cat-recording.jpg",
+    listings: "Recording & rehearsal",
+  },
+  {
+    href: "/studios?category=Workshop",
+    label: "Art Workshops",
     image: "/studios/cat-meeting.jpg",
-    listings: "1,388 listings",
-  },
-]
-
-const FEATURED = [
-  {
-    name: "Echo Lane Recording",
-    city: "Nashville, TN",
-    category: "Recording",
-    rating: 4.9,
-    reviews: 186,
-    price: 45,
-    image: "/studios/studio-1.jpg",
-  },
-  {
-    name: "Palm & Pine Podcasts",
-    city: "Austin, TX",
-    category: "Podcast",
-    rating: 4.8,
-    reviews: 132,
-    price: 38,
-    image: "/studios/studio-2.jpg",
-  },
-  {
-    name: "Northlight Stage",
-    city: "Los Angeles, CA",
-    category: "Video & Film",
-    rating: 5.0,
-    reviews: 240,
-    price: 62,
-    image: "/studios/studio-3.jpg",
-  },
-  {
-    name: "Hartwell Loft",
-    city: "Brooklyn, NY",
-    category: "Photography",
-    rating: 4.9,
-    reviews: 158,
-    price: 55,
-    image: "/studios/studio-4.jpg",
-  },
-  {
-    name: "Analog Room 12",
-    city: "Portland, OR",
-    category: "Recording",
-    rating: 4.7,
-    reviews: 94,
-    price: 40,
-    image: "/studios/studio-5.jpg",
-  },
-  {
-    name: "Frame & Firm Loft",
-    city: "Chicago, IL",
-    category: "Meeting Room",
-    rating: 4.8,
-    reviews: 121,
-    price: 30,
-    image: "/studios/studio-6.jpg",
+    listings: "Creative work spaces",
   },
 ]
 
 const STEPS = [
   {
     icon: SearchIcon,
-    title: "Browse studios",
+    title: "Discover spaces",
     description:
-      "Filter by city, craft, and budget. Every listing shows real photos, gear, and transparent hourly rates.",
+      "Filter by category and location. Every listing shows real photos, amenities and transparent hourly rates.",
+  },
+  {
+    icon: ClockIcon,
+    title: "Select shoot hours",
+    description:
+      "Pick your date and the exact hours you need. Confirmed slots are shown so you can avoid clashes.",
   },
   {
     icon: CalendarCheckIcon,
-    title: "Book your slot",
+    title: "Book instantly",
     description:
-      "Reserve by the hour or day. Instant confirmation — no calls, no quoting, no back-and-forth.",
+      "Send your request in one click and track its status from your bookings page.",
   },
   {
     icon: CameraIcon,
-    title: "Arrive and create",
+    title: "Create & produce",
     description:
-      "Door codes and access notes arrive the night before. Just show up and get to work.",
+      "Arrive, set up and get to work. The space is yours for the hours you booked.",
+  },
+]
+
+const GUARANTEES = [
+  {
+    icon: ShieldCheckIcon,
+    title: "Liability protection",
+    description:
+      "Clear booking terms and security deposits protect hosts and creators on every reservation.",
+  },
+  {
+    icon: BadgeCheckIcon,
+    title: "Verified profiles",
+    description:
+      "Hosts and guests sign in with verified accounts, so you always know who you're working with.",
+  },
+  {
+    icon: WrenchIcon,
+    title: "Equipment safety",
+    description:
+      "Hosts list their gear and amenities up front, and every space follows its posted house rules.",
+  },
+  {
+    icon: HeadsetIcon,
+    title: "24/7 host support",
+    description:
+      "Questions before a shoot or a problem during one? Our support team is always reachable.",
   },
 ]
 
@@ -213,85 +182,17 @@ export default function Home() {
   return (
     <div className="flex w-full flex-col">
       {/* Hero */}
-      <section className="mx-auto w-full max-w-7xl px-4 pt-10 pb-12 sm:px-6 sm:pt-14 lg:pt-16">
-        <div className="grid items-center gap-10 lg:grid-cols-2 lg:items-stretch lg:gap-12">
-          <div className="flex flex-col items-start gap-5">
-            <Badge variant="secondary">
-              <SparklesIcon data-icon="inline-start" />
-              12k+ studios ready to book
-            </Badge>
-            <h1 className="text-4xl leading-tight font-semibold tracking-tight text-foreground sm:text-5xl xl:text-6xl">
-              Book the space. <br className="hidden sm:block" />
-              Skip the search.
-            </h1>
-            <p className="max-w-lg text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8">
-              StudioSpace is the marketplace for photographers, podcasters,
-              filmmakers, and musicians — real spaces, transparent hourly rates,
-              and instant booking. Or list your own studio and fill its empty
-              hours.
-            </p>
-            <div className="flex flex-col gap-3 pt-1 sm:flex-row">
-              <Button size="lg" render={<Link href="/studios" />}>
-                Explore studios
-                <ArrowRightIcon data-icon="inline-end" />
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                render={<Link href="/add-studio" />}
-              >
-                List your studio
-              </Button>
-            </div>
-          </div>
+      <HeroSlider />
 
-          <div className="relative flex-1">
-            <Image
-              priority
-              src="/studios/hero.jpg"
-              alt="Photographer reviewing shots in a studio"
-              width={1200}
-              height={900}
-              className="aspect-[4/3] h-full w-full rounded-2xl object-cover"
-              sizes="(min-width: 1024px) 50vw, 100vw"
-            />
-            <Card
-              size="sm"
-              className="absolute inset-x-4 bottom-4 flex-row items-center gap-3 bg-background/90 backdrop-blur sm:inset-x-auto sm:right-4 sm:w-80"
-            >
-              <Image
-                src="/studios/studio-1.jpg"
-                alt=""
-                width={64}
-                height={64}
-                className="size-14 shrink-0 rounded-lg object-cover"
-              />
-              <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-                <p className="truncate text-sm font-semibold text-foreground">
-                  Echo Lane Recording
-                </p>
-                <p className="flex items-center gap-1 text-xs text-muted-foreground">
-                  <StarIcon className="size-3 fill-amber-500 text-amber-500" />
-                  4.9 · Nashville, TN
-                </p>
-              </div>
-              <Button size="sm" render={<Link href="/studios" />}>
-                $45/hr
-              </Button>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Stats strip */}
+      {/* Highlights strip */}
       <section className="w-full border-y border-border bg-muted/40">
         <div className="mx-auto grid w-full max-w-7xl grid-cols-2 gap-6 px-4 py-8 sm:grid-cols-4 sm:px-6">
-          {STATS.map((stat) => (
-            <div key={stat.label} className="flex flex-col items-center gap-1">
+          {HIGHLIGHTS.map((item) => (
+            <div key={item.label} className="flex flex-col items-center gap-1">
               <p className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
-                {stat.value}
+                {item.value}
               </p>
-              <p className="text-sm text-muted-foreground">{stat.label}</p>
+              <p className="text-sm text-muted-foreground">{item.label}</p>
             </div>
           ))}
         </div>
@@ -302,9 +203,9 @@ export default function Home() {
         <SectionHeading
           eyebrow="Browse by craft"
           title="Every space a creator needs"
-          description="Grimy garages with vintage desks, daylit lofts with cyc walls, dead-quiet VO booths. Whatever you make, there is a room for it."
+          description="Daylit lofts with cyc walls, sound stages, dead-quiet podcast rooms. Whatever you make, there is a room for it."
         />
-        <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6">
+        <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
           {CATEGORIES.map((category) => (
             <Link
               key={category.label}
@@ -318,7 +219,7 @@ export default function Home() {
                   width={800}
                   height={800}
                   className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
-                  sizes="(min-width: 1024px) 16vw, (min-width: 640px) 33vw, 50vw"
+                  sizes="(min-width: 1024px) 20vw, (min-width: 640px) 33vw, 50vw"
                 />
               </div>
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
@@ -338,63 +239,20 @@ export default function Home() {
         <SectionHeading
           eyebrow="Fresh on the marketplace"
           title="Featured studios this week"
-          description="Hand-picked spaces with lightning-fast hosts and verified equipment lists."
+          description="The newest spaces on StudioSpace, listed by hosts and ready to book."
         />
-        <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {FEATURED.map((studio) => (
-            <Card key={studio.name} size="sm" className="h-full">
-              <Image
-                src={studio.image}
-                alt={studio.name}
-                width={1200}
-                height={900}
-                className="aspect-[4/3] w-full object-cover transition-transform duration-300 group-hover/card:scale-105"
-                sizes={CARD_IMAGE_SIZES}
-              />
-              <CardContent className="flex flex-1 flex-col gap-3 pt-4">
-                <div className="flex items-start justify-between gap-2">
-                  <div className="flex min-w-0 flex-col gap-0.5">
-                    <CardTitle className="truncate">{studio.name}</CardTitle>
-                    <CardDescription className="flex items-center gap-1">
-                      <MapPinIcon className="size-3.5 shrink-0" />
-                      {studio.city}
-                    </CardDescription>
-                  </div>
-                  <Badge variant="secondary">{studio.category}</Badge>
-                </div>
-                <p className="flex items-center gap-1 text-sm text-foreground">
-                  <StarIcon className="size-4 fill-amber-500 text-amber-500" />
-                  <span className="font-medium">{studio.rating.toFixed(1)}</span>
-                  <span className="text-muted-foreground">
-                    ({studio.reviews} reviews)
-                  </span>
-                </p>
-                <div className="mt-auto flex items-center justify-between gap-2 border-t border-border pt-3">
-                  <p className="text-sm">
-                    <span className="text-base font-semibold text-foreground">
-                      ${studio.price}
-                    </span>
-                    <span className="text-muted-foreground">/hour</span>
-                  </p>
-                  <Button size="sm" render={<Link href={`/studios`} />}>
-                    Book now
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+        <FeaturedStudios />
       </section>
 
-      {/* How it works */}
+      {/* How booking works */}
       <section className="w-full border-y border-border bg-muted/40">
         <div className="mx-auto w-full max-w-7xl px-4 py-14 sm:px-6 sm:py-20">
           <SectionHeading
-            eyebrow="How it works"
-            title="From search to shoot in three steps"
+            eyebrow="How booking works"
+            title="From search to shoot in four steps"
             align="center"
           />
-          <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {STEPS.map((step, index) => (
               <Card key={step.title} size="sm" className="h-full">
                 <CardContent className="flex flex-col gap-4">
@@ -419,8 +277,35 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Testimonials */}
+      {/* Host guarantee */}
       <section className="mx-auto w-full max-w-7xl px-4 py-14 sm:px-6 sm:py-20">
+        <SectionHeading
+          eyebrow="Host guarantee"
+          title="Creator support you can count on"
+          description="Every booking is backed by protections for hosts and creators alike."
+          align="center"
+        />
+        <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {GUARANTEES.map((item) => (
+            <Card key={item.title} size="sm" className="h-full">
+              <CardContent className="flex flex-col gap-4">
+                <span className="flex size-10 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+                  <item.icon className="size-5" />
+                </span>
+                <div className="flex flex-col gap-1">
+                  <CardTitle>{item.title}</CardTitle>
+                  <CardDescription className="text-sm leading-6">
+                    {item.description}
+                  </CardDescription>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="mx-auto w-full max-w-7xl px-4 pb-14 sm:px-6 sm:pb-20">
         <SectionHeading
           eyebrow="Loved by creators"
           title="What people book with"
@@ -468,8 +353,8 @@ export default function Home() {
             Your next session starts here
           </h2>
           <p className="max-w-xl text-base leading-7 text-primary-foreground/70">
-            Join thousands of creators booking studios in 48 cities — or open
-            your doors to them and turn empty hours into revenue.
+            Book a studio for your next shoot, or open your doors to creators
+            and turn empty hours into revenue.
           </p>
           <div className="flex flex-col gap-3 pt-1 sm:flex-row">
             <Button
