@@ -19,6 +19,8 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { BookingDialog } from "@/components/site/booking-dialog"
+import { ReviewsSection } from "@/components/site/reviews-section"
+import { StudioGallery } from "@/components/site/studio-gallery"
 import { api, ApiError } from "@/lib/api"
 import { useSession } from "@/lib/session"
 import type { Studio } from "@/lib/studios"
@@ -56,6 +58,13 @@ export function StudioDetails({ id }: { id: string }) {
     return () => {
       cancelled = true
     }
+  }, [id])
+
+  // Re-fetches the studio quietly so the rating updates after a new review
+  const refreshStudio = React.useCallback(() => {
+    api<{ data: Studio }>(`/studios/${id}`)
+      .then((res) => setStudio(res.data))
+      .catch(() => {})
   }, [id])
 
   const handleBookClick = () => {
@@ -113,11 +122,9 @@ export function StudioDetails({ id }: { id: string }) {
 
       <div className="grid gap-8 lg:grid-cols-3">
         <div className="flex flex-col gap-6 lg:col-span-2">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={studio.imageUrl}
-            alt={studio.title}
-            className="aspect-[16/9] w-full rounded-xl border border-border object-cover"
+          <StudioGallery
+            images={[studio.imageUrl, ...(studio.gallery ?? [])]}
+            title={studio.title}
           />
 
           <div className="flex flex-col gap-3">
@@ -175,7 +182,9 @@ export function StudioDetails({ id }: { id: string }) {
             <h2 className="text-xl font-semibold text-foreground">Hosted by</h2>
             <div className="flex items-center gap-3">
               <Avatar>
-                {studio.ownerImage && <AvatarImage src={studio.ownerImage} alt={studio.ownerName} />}
+                {studio.ownerImage && (
+                  <AvatarImage src={studio.ownerImage} alt={studio.ownerName} />
+                )}
                 <AvatarFallback>
                   {studio.ownerName?.slice(0, 2).toUpperCase() || "H"}
                 </AvatarFallback>
@@ -191,14 +200,7 @@ export function StudioDetails({ id }: { id: string }) {
             </div>
           </section>
 
-          <section className="flex flex-col gap-2">
-            <h2 className="text-xl font-semibold text-foreground">Reviews</h2>
-            <p className="text-sm text-muted-foreground">
-              {studio.reviewCount === 0
-                ? "No reviews yet. Be the first to book and share your experience."
-                : `${studio.reviewCount} guest reviews.`}
-            </p>
-          </section>
+          <ReviewsSection studio={studio} onReviewed={refreshStudio} />
         </div>
 
         <aside className="lg:col-span-1">

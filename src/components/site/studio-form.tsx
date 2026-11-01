@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
-import { Loader2Icon, UploadIcon } from "lucide-react"
+import { ImagePlusIcon, Loader2Icon, UploadIcon, XIcon } from "lucide-react"
 import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
@@ -33,6 +33,8 @@ const AMENITIES = [
   "Changing room",
   "Props",
 ]
+
+const MAX_GALLERY = 8
 
 const positiveNumber = (label: string) =>
   z
@@ -85,6 +87,10 @@ export function StudioForm({ studio }: { studio?: Studio }) {
   const [uploading, setUploading] = React.useState(false)
   const fileRef = React.useRef<HTMLInputElement>(null)
 
+  const [gallery, setGallery] = React.useState<string[]>(studio?.gallery ?? [])
+  const [uploadingGallery, setUploadingGallery] = React.useState(false)
+  const galleryRef = React.useRef<HTMLInputElement>(null)
+
   const {
     register,
     handleSubmit,
@@ -129,6 +135,34 @@ export function StudioForm({ studio }: { studio?: Studio }) {
     }
   }
 
+  const handleGalleryUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files ?? [])
+    e.target.value = ""
+    if (files.length === 0) return
+
+    const room = MAX_GALLERY - gallery.length
+    if (room <= 0) {
+      toast.error(`You can add up to ${MAX_GALLERY} gallery photos.`)
+      return
+    }
+
+    setUploadingGallery(true)
+    try {
+      const urls: string[] = []
+      for (const file of files.slice(0, room)) {
+        urls.push(await uploadImage(file))
+      }
+      setGallery((prev) => [...prev, ...urls])
+      toast.success(
+        `${urls.length} photo${urls.length > 1 ? "s" : ""} uploaded.`
+      )
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Upload failed.")
+    } finally {
+      setUploadingGallery(false)
+    }
+  }
+
   const onSubmit = async (values: FormValues) => {
     setSubmitting(true)
     try {
@@ -138,6 +172,7 @@ export function StudioForm({ studio }: { studio?: Studio }) {
         securityDeposit: Number(values.securityDeposit),
         maxCapacity: Number(values.maxCapacity),
         amenities,
+        gallery,
       }
 
       if (studio) {
@@ -253,7 +288,7 @@ export function StudioForm({ studio }: { studio?: Studio }) {
           </div>
 
           <div className="flex flex-col gap-2 sm:col-span-2">
-            <Label htmlFor="imageUrl">Image URL</Label>
+            <Label htmlFor="imageUrl">Cover image URL</Label>
 
             <div className="flex flex-col gap-2 sm:flex-row">
               <Input
@@ -296,6 +331,56 @@ export function StudioForm({ studio }: { studio?: Studio }) {
                 className="mt-1 aspect-[16/9] w-full max-w-sm rounded-lg border border-border object-cover"
               />
             )}
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-3">
+          <Label>Gallery photos (optional, up to {MAX_GALLERY})</Label>
+          <input
+            ref={galleryRef}
+            type="file"
+            accept="image/*"
+            multiple
+            className="hidden"
+            onChange={handleGalleryUpload}
+          />
+          <div className="flex flex-wrap gap-3">
+            {gallery.map((src) => (
+              <div key={src} className="relative">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={src}
+                  alt="Gallery photo"
+                  className="size-24 rounded-lg border border-border object-cover"
+                />
+                <button
+                  type="button"
+                  aria-label="Remove photo"
+                  onClick={() =>
+                    setGallery((prev) => prev.filter((u) => u !== src))
+                  }
+                  className="absolute -top-2 -right-2 flex size-6 items-center justify-center rounded-full bg-destructive text-white"
+                >
+                  <XIcon className="size-3.5" />
+                </button>
+              </div>
+            ))}
+            <Button
+              type="button"
+              variant="outline"
+              disabled={uploadingGallery || gallery.length >= MAX_GALLERY}
+              onClick={() => galleryRef.current?.click()}
+              className="size-24 flex-col gap-1"
+            >
+              {uploadingGallery ? (
+                <Loader2Icon className="size-5 animate-spin" />
+              ) : (
+                <ImagePlusIcon className="size-5" />
+              )}
+              <span className="text-xs">
+                {uploadingGallery ? "Uploading" : "Add"}
+              </span>
+            </Button>
           </div>
         </div>
 
@@ -361,7 +446,10 @@ export function StudioForm({ studio }: { studio?: Studio }) {
           >
             Cancel
           </Button>
-          <Button type="submit" disabled={submitting || uploading}>
+          <Button
+            type="submit"
+            disabled={submitting || uploading || uploadingGallery}
+          >
             {submitting && <Loader2Icon className="size-4 animate-spin" />}
             {isEdit ? "Save changes" : "Add studio"}
           </Button>

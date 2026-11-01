@@ -8,7 +8,7 @@ const API_URL =
   "http://localhost:8000"
 
 // Only these Express resources can be reached through the proxy
-const ALLOWED = new Set(["studios", "bookings"])
+const ALLOWED = new Set(["studios", "bookings", "reviews"])
 
 function json(message: string, status: number) {
   return NextResponse.json({ success: false, message }, { status })
