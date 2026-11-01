@@ -1,5 +1,3 @@
-import { authClient } from "@/lib/auth-client"
-
 export const API_URL =
   process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000"
 
@@ -27,15 +25,13 @@ export async function api<T = unknown>(
 
   if (body !== undefined) finalHeaders["Content-Type"] = "application/json"
 
-  if (auth) {
-    const { data } = await authClient.token()
-    if (!data?.token) throw new ApiError("Please log in to continue.", 401)
-    finalHeaders.Authorization = `Bearer ${data.token}`
-  }
+  // Protected calls go through our own origin; the HTTPOnly session cookie
+  // is sent automatically and the JWT is attached on the server.
+  const url = auth ? `/api/proxy${path}` : `${API_URL}${path}`
 
   let res: Response
   try {
-    res = await fetch(`${API_URL}${path}`, {
+    res = await fetch(url, {
       ...init,
       headers: finalHeaders,
       body: body !== undefined ? JSON.stringify(body) : undefined,
