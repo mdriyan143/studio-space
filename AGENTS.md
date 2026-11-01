@@ -9,14 +9,21 @@ Next.js 16.4.3 App Router app (`src/app/`), React 19, npm. No test framework, CI
 
 ## Project state
 
-- Front-end only: no backend, DB, or API routes, and no code in `src/` calls `fetch`. Content pages outside the home page (`/about`, `/dashboard/*`, `/studios/*`, …) render `<PagePlaceholder>`.
-- Auth is a client-side mock in `src/lib/session.tsx` (`useSession` / `SessionProvider` from the root layout). `startInDemo` boots the app as a fake demo user; there is no real auth yet.
+- App (marketing + listing UI) is still static content: most page data is hardcoded module constants and no component calls `fetch`. Only the auth API route exists (`src/app/api/auth/[...all]/route.ts`, better-auth via `toNextJsHandler`).
+- All content pages except the home page render `<PagePlaceholder>` (placeholders): `/about`, `/studios`, `/add-studio`, `/dashboard`, `/my-listings`, `/my-bookings`, `/how-it-works`, `/privacy`, `/terms`.
+
+## Auth (better-auth)
+
+- Wired via `src/lib/auth.ts` (server) + `src/lib/auth-client.ts` (`authClient`, used by `useSession` in `src/lib/session.tsx`). `SessionProvider` in the root layout is a pass-through — it provides no context; `useSession()` reads the session directly from `authClient`.
+- Stack: better-auth + `mongodbAdapter` (`src/lib/db.ts`) + `jwt()` plugin on both server and client. Google OAuth is configured via `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET`.
+- Env vars: copy `.env.example` → `.env.local` (`.env*` is gitignored). `MONGODB_URI` is required — `db.ts` throws at import time without it. Google login needs the OAuth client's redirect URI `http://localhost:3000/api/auth/google/callback`.
+- Env var mismatch: `.env.example` documents `MONGODB_DB`, but `db.ts` reads `DB_NAME` (fallback `studiospace`). Only `DB_NAME` takes effect.
+- Password rule for email sign-up (enforced in a `before` hook in `auth.ts`): ≥6 chars with at least one uppercase and one lowercase.
 
 ## Framework gotchas
 
 - Tailwind v4: there is no `tailwind.config` — theme tokens are `@theme` CSS variables in `src/app/globals.css`. CSS is built via the `@tailwindcss/turbopack` rule in `next.config.ts`, so it only works with Turbopack builds (dev/build, not plain webpack).
-- `next.config.ts` enables `cacheComponents` and `partialPrefetching` — async data fetching must follow the cache-components conventions (Suspense boundaries around uncached I/O). Check `node_modules/next/dist/docs/` before using data fetching APIs.
-- Layouts and pages use the generated `LayoutProps<"/">` / `PageProps` helpers (`next typegen`) instead of hand-written prop types.
+- The root layout uses the generated `LayoutProps<"/">` type helper (`next typegen`). Use the generated prop helpers (`LayoutProps`, `PageProps`) rather than hand-written types if more are needed.
 
 ## UI / shadcn
 

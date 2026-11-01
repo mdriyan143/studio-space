@@ -1,10 +1,13 @@
-import { PagePlaceholder } from "@/components/site/page-placeholder"
+import { Suspense } from "react"
 
-export default function Page() {
+import { StudiosExplorer } from "@/components/site/studios-explorer"
+
+export const metadata = { title: "Explore Studios" }
+
+export default function StudiosPage() {
   return (
-    <PagePlaceholder
-      title="Explore Studios"
-      description="Browse and book photography, recording, podcast and film studios near you. Full search and filtering is coming soon."
-    />
+    <Suspense fallback={null}>
+      <StudiosExplorer />
+    </Suspense>
   )
 }
