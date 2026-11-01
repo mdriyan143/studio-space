@@ -7,6 +7,7 @@ import {
   CalendarDaysIcon,
   CalendarXIcon,
   ClockIcon,
+  DownloadIcon,
   Loader2Icon,
   MapPinIcon,
 } from "lucide-react"
@@ -25,6 +26,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { BookingStatusBadge } from "@/components/site/booking-status-badge"
 import { api } from "@/lib/api"
+import { downloadInvoice } from "@/lib/invoice"
 import type { Booking, BookingStatus } from "@/lib/bookings"
 import type { ListResponse } from "@/lib/studios"
 
@@ -264,7 +266,22 @@ export function MyBookings() {
                             </Button>
                           </>
                         )}
-
+                        {tab === "mine" &&
+                          (booking.status === "Confirmed" ||
+                            booking.status === "Completed") && (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => {
+                                downloadInvoice(booking)
+                                  .then(() => toast.success("Invoice downloaded."))
+                                  .catch(() => toast.error("Could not create the invoice."))
+                              }}
+                            >
+                              <DownloadIcon className="size-3.5" />
+                              Download Invoice
+                            </Button>
+                          )}
                         {tab === "hosting" && booking.status === "Confirmed" && (
                           <Button
                             size="sm"
