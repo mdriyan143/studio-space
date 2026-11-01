@@ -1,10 +1,12 @@
-import { PagePlaceholder } from "@/components/site/page-placeholder"
+import { MyBookings } from "@/components/site/my-bookings"
+import { RequireAuth } from "@/components/site/require-auth"
 
-export default function Page() {
+export const metadata = { title: "My Bookings" }
+
+export default function MyBookingsPage() {
   return (
-    <PagePlaceholder
-      title="My Bookings"
-      description="Upcoming and past bookings across all your studios."
-    />
+    <RequireAuth>
+      <MyBookings />
+    </RequireAuth>
   )
 }
