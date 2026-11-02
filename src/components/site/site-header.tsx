@@ -131,7 +131,6 @@ export function SiteHeader() {
               <Button
                 variant="ghost"
                 render={<Link href="/login" />}
-                className="hidden sm:inline-flex"
               >
                 Login
               </Button>
