@@ -178,27 +178,36 @@ export function StudioDetails({ id }: { id: string }) {
             )}
           </section>
 
-          <section className="flex flex-col gap-3">
-            <h2 className="text-xl font-semibold text-foreground">Hosted by</h2>
-            <div className="flex items-center gap-3">
-              <Avatar>
-                {studio.ownerImage && (
-                  <AvatarImage src={studio.ownerImage} alt={studio.ownerName} />
-                )}
-                <AvatarFallback>
-                  {studio.ownerName?.slice(0, 2).toUpperCase() || "H"}
-                </AvatarFallback>
-              </Avatar>
-              <div className="flex flex-col">
-                <span className="font-medium text-foreground">
-                  {studio.ownerName}
-                </span>
-                <span className="text-sm text-muted-foreground">
-                  {studio.ownerEmail}
-                </span>
-              </div>
-            </div>
-          </section>
+       <section className="flex flex-col gap-3">
+  <h2 className="text-xl font-semibold text-foreground">Hosted by</h2>
+  <div className="flex items-center gap-3">
+    <Avatar>
+      {studio.ownerImage && (
+        <AvatarImage src={studio.ownerImage} alt={studio.ownerName} />
+      )}
+      <AvatarFallback>
+        {studio.ownerName?.slice(0, 2).toUpperCase() || "H"}
+      </AvatarFallback>
+    </Avatar>
+    <div className="flex flex-col">
+      <span className="font-medium text-foreground">
+        {studio.ownerName}
+      </span>
+      <span className="text-sm text-muted-foreground">
+        {studio.ownerEmail}
+      </span>
+    </div>
+
+    <Button
+      variant="outline"
+      size="sm"
+      className="ml-auto"
+      render={<Link href={`/hosts/${studio.ownerId}`} />}
+    >
+      View profile
+    </Button>
+  </div>
+</section>
 
           <ReviewsSection studio={studio} onReviewed={refreshStudio} />
         </div>

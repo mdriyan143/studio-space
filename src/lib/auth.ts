@@ -9,6 +9,14 @@ import { db, client } from "@/lib/db";
 export const auth = betterAuth({
   database: mongodbAdapter(db, { client }),
 
+    user: {
+    additionalFields: {
+      phone: { type: "string", required: false, input: true },
+      location: { type: "string", required: false, input: true },
+      bio: { type: "string", required: false, input: true },
+    },
+  },
+
   emailAndPassword: {
     enabled: true,
     minPasswordLength: 6,
@@ -34,20 +42,31 @@ export const auth = betterAuth({
 
   hooks: {
     before: createAuthMiddleware(async (ctx) => {
-      if (ctx.path === "/sign-up/email") {
-        const password = ctx.body.password;
+      const passwordRule =
+        "Password must contain at least 6 characters, including one uppercase and one lowercase letter."
 
-        if (
-          typeof password !== "string" ||
-          password.length < 6 ||
-          !/[A-Z]/.test(password) ||
-          !/[a-z]/.test(password)
-        ) {
-          throw new APIError("BAD_REQUEST", {
-            message:
-              "Password must contain at least 6 characters, including one uppercase and one lowercase letter.",
-          });
-        }
+      const isValid = (p: unknown) =>
+        typeof p === "string" &&
+        p.length >= 6 &&
+        /[A-Z]/.test(p) &&
+        /[a-z]/.test(p)
+
+      if (ctx.path === "/sign-up/email" && !isValid(ctx.body.password)) {
+        throw new APIError("BAD_REQUEST", { message: passwordRule })
+      }
+
+      if (ctx.path === "/change-password" && !isValid(ctx.body.newPassword)) {
+        throw new APIError("BAD_REQUEST", { message: passwordRule })
+      }
+
+      if (
+        ctx.path === "/update-user" &&
+        typeof ctx.body.bio === "string" &&
+        ctx.body.bio.length > 200
+      ) {
+        throw new APIError("BAD_REQUEST", {
+          message: "Bio must be 200 characters or fewer.",
+        })
       }
     }),
   },
