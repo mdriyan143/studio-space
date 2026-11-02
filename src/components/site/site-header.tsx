@@ -18,6 +18,7 @@ import {
 import { Logo } from "@/components/site/logo"
 import { UserMenu } from "@/components/site/user-menu"
 import { useSession } from "@/lib/session"
+import { NotificationBell } from "@/components/site/notification-bell"
 
 
 const NAV_LINKS = [
@@ -125,7 +126,11 @@ export function SiteHeader() {
         <div className="ml-auto flex items-center gap-2">
             <ThemeToggle />
             {isPending ? null : user ? (
-            <UserMenu user={user} />
+              <>
+                 <NotificationBell />
+                 <UserMenu user={user} />
+              </>
+           
           ) : (
             <>
               <Button
